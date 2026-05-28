@@ -1,6 +1,7 @@
 package com.th.taskproject.controllers;
 
 
+import com.th.taskproject.dtos.UserDTO;
 import com.th.taskproject.entities.User;
 import com.th.taskproject.services.UserService;
 import jakarta.validation.Valid;
@@ -20,14 +21,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
-        List<User> request = userService.ListAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
+        List<UserDTO> request = userService.ListAllUsers();
         return ResponseEntity.ok().body(request);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
-        User request = userService.findUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
+        UserDTO request = userService.findUserById(id);
         return ResponseEntity.ok().body(request);
     }
 
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user){
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User user){
         User request = userService.updateUser(id, user);
         return ResponseEntity.ok().body(request);
     }
