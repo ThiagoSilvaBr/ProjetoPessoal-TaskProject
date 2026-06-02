@@ -1,4 +1,7 @@
 package com.th.taskproject.repositories;
 
-public interface CategoryRepository {
+import com.th.taskproject.entities.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CategoryRepository extends JpaRepository<Category,Long> {
 }
