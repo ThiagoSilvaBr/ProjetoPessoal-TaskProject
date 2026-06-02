@@ -1,6 +1,8 @@
 package com.th.taskproject.services;
 
-import com.th.taskproject.dtos.UserDTO;
+import com.th.taskproject.dtos.UserCreateDTO;
+import com.th.taskproject.dtos.UserGetDTO;
+import com.th.taskproject.dtos.UserUpdateDTO;
 import com.th.taskproject.entities.User;
 import com.th.taskproject.exceptions.ResourceNotFoundException;
 import com.th.taskproject.repositories.UserRepository;
@@ -15,41 +17,53 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<UserDTO> ListAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(user -> new UserDTO(
-                        user.getId(),
-                        user.getName(),
-                        user.getEmail()
-
-        )).toList();
-    }
-
-    public UserDTO findUserById(Long id) {
-        User user =  userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-
-        return new UserDTO(
+    private UserGetDTO convertToDTO(User user) {
+        return new UserGetDTO(
                 user.getId(),
                 user.getName(),
                 user.getEmail()
         );
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public List<UserGetDTO> listAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+
     }
 
-    public User updateUser(Long id, User user) {
-        User updatedUser = userRepository.findById(id).get();
-        updatedUser.setName(user.getName());
-        updatedUser.setEmail(user.getEmail());
+    public UserGetDTO findUserById(Long id) {
+        User user =  userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        return userRepository.save(updatedUser);
+        return  convertToDTO(user);
+    }
+
+    public UserGetDTO saveUser(UserCreateDTO dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+
+        User savedUser = userRepository.save(user);
+        return  convertToDTO(savedUser);
+    }
+
+    public UserGetDTO updateUser(Long id, UserUpdateDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+
+        User savedUser = userRepository.save(user);
+        return  convertToDTO(savedUser);
     }
 
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        userRepository.delete(user);
     }
 }
