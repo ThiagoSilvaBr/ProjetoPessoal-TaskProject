@@ -1,18 +1,16 @@
 package com.th.taskproject.dtos;
 
-public class UserDTO {
+public class CategoryGetDTO {
 
     private Long id;
     private String name;
-    private String email;
 
-    public UserDTO() {
+    public CategoryGetDTO() {
     }
 
-    public UserDTO(Long id, String name, String email) {
+    public CategoryGetDTO(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.email = email;
     }
 
     public Long getId() {
@@ -29,13 +27,5 @@ public class UserDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
