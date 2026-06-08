@@ -36,9 +36,11 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskGetDTO> createTask(@Valid @RequestBody TaskCreateDTO dto){
-        TaskGetDTO request = taskService.saveTask(dto);
+        TaskGetDTO task = taskService.saveTask(dto);
+        URI uri  = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(task.getId()).toUri();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(request);
+        return ResponseEntity.created(uri).body(task);
     }
 
     @PutMapping("/{id}")
